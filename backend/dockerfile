@@ -1,0 +1,26 @@
+# backend/Dockerfile
+FROM public.ecr.aws/docker/library/python:3.13-slim
+
+# Install uv
+COPY --from=astral/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /app
+
+# Copy dependency files first (better layer caching)
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies
+RUN uv sync --frozen --no-dev
+
+# Copy application code
+COPY . .
+
+# Create non-root user
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Document the port
+EXPOSE 8000
+
+# Run the application
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
