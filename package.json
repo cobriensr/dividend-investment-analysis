@@ -1,0 +1,31 @@
+{
+  "name": "my-app",
+  "private": true,
+  "scripts": {
+    "dev": "docker-compose up db -d && concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend/dividend-analyzer && npm run dev:all",
+    "install:backend": "cd backend && uv sync",
+    "dev:backend": "cd backend && uv run uvicorn app.main:app --reload",
+    "dev:docker": "docker-compose --profile full up",
+    "stop": "docker-compose down",
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "install:frontend": "cd frontend/dividend-analyzer && npm install",
+    "build": "cd frontend/dividend-analyzer && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && uv run pytest",
+    "test:backend:watch": "cd backend && uv run ptw",
+    "test:backend:cov": "cd backend && uv run pytest --cov=app --cov-report=html",
+    "test:backend:fast": "cd backend && uv run pytest -n auto -m 'not slow'",
+    "test:backend:debug": "cd backend && uv run pytest -vvs --randomly-dont-shuffle",
+    "test:frontend": "cd frontend/dividend-analyzer && npm run test:run",
+    "test:watch": "cd frontend/dividend-analyzer && npm run test",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "concurrently": "^8.2.0",
+    "vitest": "^3.2.4"
+  }
+}

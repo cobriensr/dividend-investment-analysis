@@ -1,0 +1,40 @@
+# docker-compose.yml
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: cobriensr
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: dividend
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    profiles: ["full"]  # Only runs with --profile full
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://cobriensr:admin@db/dividend
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --reload --host 0.0.0.0
+
+  frontend:
+    build: ./frontend
+    profiles: ["full"]  # Only runs with --profile full
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host
+
+volumes:
+  postgres_data:

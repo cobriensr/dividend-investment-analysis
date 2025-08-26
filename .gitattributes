@@ -1,0 +1,171 @@
+# =============================================
+# Line Ending Normalization
+# =============================================
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# =============================================
+# Source Code
+# =============================================
+# Python
+*.py text diff=python
+*.pyw text diff=python
+*.pyx text diff=python
+*.pyz text diff=python
+*.pyi text diff=python
+*.pyc binary
+*.pyd binary
+*.pyo binary
+
+# JavaScript/TypeScript
+*.js text
+*.jsx text
+*.ts text
+*.tsx text
+*.mjs text
+*.cjs text
+*.json text
+*.json5 text
+
+# Web
+*.html text diff=html
+*.htm text diff=html
+*.css text diff=css
+*.scss text diff=css
+*.sass text
+*.less text
+*.vue text
+*.svelte text
+
+# =============================================
+# Configuration
+# =============================================
+*.yml text
+*.yaml text
+*.toml text
+*.ini text
+*.cfg text
+*.conf text
+*.config text
+.gitignore text
+.gitattributes text
+.editorconfig text
+.env text
+.env.* text
+*.xml text
+
+# Shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+*.command text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# =============================================
+# Documentation
+# =============================================
+*.md text diff=markdown
+*.mdx text diff=markdown
+*.rst text
+*.txt text
+README* text
+LICENSE* text
+CHANGELOG* text
+AUTHORS* text
+CONTRIBUTORS* text
+NOTICE* text
+TODO* text
+
+# =============================================
+# Docker
+# =============================================
+Dockerfile text
+Dockerfile.* text
+docker-compose*.yml text
+.dockerignore text
+
+# =============================================
+# Data & Binary Files
+# =============================================
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+*.svgz binary
+*.webp binary
+*.avif binary
+
+# Fonts
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+
+# Documents
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+*.7z binary
+*.rar binary
+
+# Database
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+
+# =============================================
+# Special Files
+# =============================================
+# Lock files - preserve exact line endings
+package-lock.json text -diff
+yarn.lock text -diff
+pnpm-lock.yaml text -diff
+uv.lock text -diff
+poetry.lock text -diff
+Pipfile.lock text -diff
+
+# Generated files
+*.min.js text -diff
+*.min.css text -diff
+*.map text -diff
+
+# Vendor files
+vendor/* linguist-vendored
+node_modules/* linguist-vendored
+*/vendor/* linguist-vendored
+
+# Documentation
+docs/* linguist-documentation
+*.md linguist-documentation
+
+# =============================================
+# Language Detection for GitHub
+# =============================================
+# Mark generated files
+routeTree.gen.ts linguist-generated
+*.generated.* linguist-generated
+*_gen.* linguist-generated
+
+# Ensure main languages are detected
+backend/*.py linguist-detectable
+frontend/src/**/*.tsx linguist-detectable
+frontend/src/**/*.ts linguist-detectable
