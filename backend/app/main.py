@@ -1,24 +1,19 @@
-from typing import Union
-from datetime import datetime, timezone
-
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
+from typing import Union
+
 from fastapi import Depends, FastAPI
-from pydantic import BaseModel
-
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
-from .dependencies import (
-    get_async_session,
-    get_token_header,
-    create_db_and_tables_async,
-    AsyncSessionDep,
-    TokenDep
-)
+from .dependencies import AsyncSessionDep, create_db_and_tables_async, get_token_header
+
 
 # Lifespan context manager
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan():
     # Startup
     await create_db_and_tables_async()
     print("Database tables created")
@@ -26,11 +21,10 @@ async def lifespan(app: FastAPI):
     # Shutdown
     print("Shutting down")
 
+
 # Create FastAPI app
 app = FastAPI(
-    title="Hero API",
-    lifespan=lifespan,
-    dependencies=[Depends(get_token_header)]
+    title="Hero API", lifespan=lifespan, dependencies=[Depends(get_token_header)]
 )
 
 app.add_middleware(
@@ -62,6 +56,7 @@ async def read_item(item_id: int, q: Union[str, None] = None):
 async def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
 
+
 # Database endpoint test
 @app.get("/db-test")
 async def test_database(session: AsyncSessionDep):
@@ -84,12 +79,12 @@ async def test_database(session: AsyncSessionDep):
             "test_query": result.scalar(),
             "postgres_version": version,
             "database_time": str(db_time),  # Convert to string
-            "api_time": datetime.now(timezone.utc).isoformat()
+            "api_time": datetime.now(timezone.utc).isoformat(),
         }
-    except Exception as e:
+    except SQLAlchemyError as e:
         return {
             "database": "error",
             "status": "unhealthy",
             "message": str(e),
-            "type": type(e).__name__
+            "type": type(e).__name__,
         }

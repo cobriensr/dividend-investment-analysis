@@ -1,5 +1,5 @@
 import os
-from typing import Annotated
+from typing import Annotated, AsyncGenerator
 from sqlmodel import SQLModel
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
@@ -29,16 +29,13 @@ async_engine = create_async_engine(
     max_overflow=20,
     pool_pre_ping=True,
     pool_recycle=3600,
-    future=True  # SQLAlchemy 2.0 style
+    future=True,  # SQLAlchemy 2.0 style
 )
 
 AsyncSessionLocal = sessionmaker(
-    async_engine,
-    class_=AsyncSession,
-    expire_on_commit=False
+    async_engine, class_=AsyncSession, expire_on_commit=False
 )
 
-from typing import AsyncGenerator
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     """Dependency for async database sessions"""
@@ -51,10 +48,12 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         finally:
             await session.close()
 
+
 async def create_db_and_tables_async():
     """Create database tables (for async engine)"""
     async with async_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
+
 
 def get_token_header(x_token: Annotated[str, Header()]) -> str:
     """Validate API token from header"""
@@ -63,6 +62,7 @@ def get_token_header(x_token: Annotated[str, Header()]) -> str:
     if x_token != TOKEN:
         raise HTTPException(status_code=401, detail="Invalid authentication token")
     return x_token
+
 
 # Type aliases for cleaner code
 TokenDep = Annotated[str, Depends(get_token_header)]
